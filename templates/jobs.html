@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<h2>Jobs</h2>
+
+<a href="/add-job" class="btn btn-primary mb-3">Add Job</a>
+
+{% for job in jobs %}
+<div class="card p-3 mb-2">
+    <h4>{{ job.title }}</h4>
+    <p><strong>Company:</strong> {{ job.company }}</p>
+    <p><strong>Skills:</strong> {{ job.skills }}</p>
+    <p><strong>Location:</strong> {{ job.location }}</p>
+</div>
+{% endfor %}
+
+{% endblock %}

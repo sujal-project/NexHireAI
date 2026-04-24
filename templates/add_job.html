@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<h2>Add Job</h2>
+
+<form method="POST">
+    <input name="title" placeholder="Title" class="form-control mb-2">
+    <input name="company" placeholder="Company" class="form-control mb-2">
+    <input name="skills" placeholder="Skills (comma separated)" class="form-control mb-2">
+    <input name="salary" placeholder="Salary" class="form-control mb-2">
+    <input name="location" placeholder="Location" class="form-control mb-2">
+    <textarea name="description" placeholder="Description" class="form-control mb-2"></textarea>
+
+    <button class="btn btn-success">Post Job</button>
+</form>
+
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<h2>Admin Dashboard</h2>
+
+<div class="row">
+
+<div class="col-md-4">
+<div class="card p-3">
+<h5>Total Users</h5>
+<h2>{{ users }}</h2>
+</div>
+</div>
+
+<div class="col-md-4">
+<div class="card p-3">
+<h5>Total Jobs</h5>
+<h2>{{ jobs }}</h2>
+</div>
+</div>
+
+<div class="col-md-4">
+<div class="card p-3">
+<h5>Applications</h5>
+<h2>{{ apps }}</h2>
+</div>
+</div>
+
+</div>
+
+{% endblock %}

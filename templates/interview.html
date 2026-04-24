@@ -1,0 +1,13 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<h2>Interview Preparation</h2>
+
+{% for q in questions %}
+<div class="card p-3 mb-2">
+    <h5>{{ q.question }}</h5>
+    <span class="badge bg-secondary">{{ q.difficulty }}</span>
+</div>
+{% endfor %}
+
+{% endblock %}

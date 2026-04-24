@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<h2>Recommended Jobs</h2>
+
+{% for job, score in jobs %}
+<div class="card p-3 mb-3">
+    <h4>{{ job.title }}</h4>
+    <p>{{ job.company }}</p>
+
+    <div class="progress">
+        <div class="progress-bar bg-success" style="width: {{ score*100 }}%">
+            {{ (score*100)|round(0) }}%
+        </div>
+    </div>
+</div>
+{% endfor %}
+
+{% endblock %}
