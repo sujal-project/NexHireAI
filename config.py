@@ -14,7 +14,7 @@ class Config:
     
     DB_CONNECTION_STRING = (
         "DRIVER={ODBC Driver 17 for SQL Server};"
-        "SERVER=localhost;"
+        "SERVER=localhost\\SQLEXPRESS;"
         "DATABASE=NexHireAI;"
         "Trusted_Connection=yes;"
     )
