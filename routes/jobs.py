@@ -64,45 +64,111 @@ def add_job():
 # -----------------------
 # RESUME UPLOAD
 # -----------------------
+
 @jobs_bp.route('/upload-resume', methods=['GET','POST'])
 @login_required
 def upload_resume():
 
     if request.method == 'POST':
 
-        if 'resume' not in request.files:
-            return "No file uploaded"
+        # # ❌ No file
+        # if 'resume' not in request.files:
+        #     return "No file uploaded"
 
-        file = request.files['resume']
+        # file = request.files['resume']
 
-        if file.filename == '':
-            return "No selected file"
+        # # ❌ Empty filename
+        # if file.filename == '':
+        #     return "No selected file"
 
-        if file and allowed_file(file.filename):
+        # # ❌ Invalid type
+        # if not allowed_file(file.filename):
+        #     return "Only PDF allowed"
 
-            filename = secure_filename(file.filename)
-            path = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
+        # ✅ SAFE FILE NAME
+        filename = secure_filename(file.filename)
 
-            file.save(path)
+        # ✅ PREVENT OVERWRITE (MAIN FIX)
+        unique_name = f"{current_user.id}_{filename}"
 
-            text = extract_text(path)
-            skills = extract_skills(text)
+        path = os.path.join(current_app.config['UPLOAD_FOLDER'], unique_name)
 
-            conn = get_connection()
-            cursor = conn.cursor()
+        # ✅ SAVE FILE
+        file.save(path)
 
-            cursor.execute("""
-                INSERT INTO resumes (user_id, file_path, extracted_text, skills)
-                VALUES (?, ?, ?, ?)
-            """, (current_user.id, path, text, ",".join(skills)))
+        # ✅ EXTRACT TEXT
+        text = extract_text(path)
 
-            conn.commit()
+        if not text.strip():
+            return "Could not extract text from PDF"
 
-            return f"Extracted Skills: {skills}"
+        # ✅ EXTRACT SKILLS
+        skills = extract_skills(text)
 
-        return "Only PDF allowed"
+        
+        # ✅ SAVE TO DB
+        conn = get_connection()
+        cursor = conn.cursor()
+
+        # 🔥 DELETE OLD RESUME (ADD HERE)
+        cursor.execute("DELETE FROM resumes WHERE user_id=?", (current_user.id,))
+
+        # ✅ INSERT NEW RESUME
+        cursor.execute("""
+            INSERT INTO resumes (user_id, file_path, extracted_text, skills)
+            VALUES (?, ?, ?, ?)
+        """, (
+            current_user.id,
+            path,
+            text,
+            ",".join(skills)
+        ))
+
+        conn.commit()
+
+        return f"Skills extracted: {skills}"
 
     return render_template("upload_resume.html")
+
+# @jobs_bp.route('/upload-resume', methods=['GET','POST'])
+# @login_required
+# def upload_resume():
+
+#     if request.method == 'POST':
+
+#         if 'resume' not in request.files:
+#             return "No file uploaded"
+
+#         file = request.files['resume']
+
+#         if file.filename == '':
+#             return "No selected file"
+
+#         if file and allowed_file(file.filename):
+
+#             filename = secure_filename(file.filename)
+#             path = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
+
+#             file.save(path)
+
+#             text = extract_text(path)
+#             skills = extract_skills(text)
+
+#             conn = get_connection()
+#             cursor = conn.cursor()
+
+#             cursor.execute("""
+#                 INSERT INTO resumes (user_id, file_path, extracted_text, skills)
+#                 VALUES (?, ?, ?, ?)
+#             """, (current_user.id, path, text, ",".join(skills)))
+
+#             conn.commit()
+
+#             return f"Extracted Skills: {skills}"
+
+#         return "Only PDF allowed"
+
+#     return render_template("upload_resume.html")
 
 # -----------------------
 # AI JOB RECOMMENDATION
