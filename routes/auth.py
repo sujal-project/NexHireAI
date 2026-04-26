@@ -78,8 +78,10 @@ def login():
 @auth_bp.route('/dashboard')
 @login_required
 def dashboard():
-    return redirect('/jobs') if current_user.role == "recruiter" else redirect('/recommended-jobs')
-
+    if current_user.role == "recruiter":
+        return redirect('/jobs')
+    else:
+        return render_template("jobseeker_dashboard.html")
 
 @auth_bp.route('/logout')
 @login_required

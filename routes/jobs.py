@@ -62,7 +62,7 @@ def add_job():
     return render_template("add_job.html")
 
 # -----------------------
-# RESUME UPLOAD
+# RESUME UPLOAD CORRENT
 # -----------------------
 
 @jobs_bp.route('/upload-resume', methods=['GET','POST'])
@@ -130,6 +130,9 @@ def upload_resume():
 
     return render_template("upload_resume.html")
 
+# -----------------------
+# RESUME UPLOAD OLD
+# -----------------------
 # @jobs_bp.route('/upload-resume', methods=['GET','POST'])
 # @login_required
 # def upload_resume():
@@ -240,3 +243,70 @@ def admin():
     apps = cursor.fetchone()[0]
 
     return render_template("admin.html", users=users, jobs=jobs, apps=apps)
+    
+
+# -----------------------
+# ADD RESUME SCORE FEATURE
+# -----------------------
+
+@jobs_bp.route('/resume-score')
+@login_required
+def resume_score():
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT skills FROM resumes WHERE user_id=?", (current_user.id,))
+    res = cursor.fetchone()
+
+    if not res:
+        return "Upload resume first"
+
+    skills = res[0].split(",")
+
+    score = min(len(skills) * 15, 100)
+
+    return render_template("resume_score.html", score=score, skills=skills)
+
+
+#---------------------------
+#   APPLY TO JOB FEATURE
+#---------------------------
+
+@jobs_bp.route('/apply/<int:job_id>')
+@login_required
+def apply(job_id):
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        INSERT INTO applications (user_id, job_id, status)
+        VALUES (?, ?, ?)
+    """, (current_user.id, job_id, "Applied"))
+
+    conn.commit()
+
+    return redirect('/my-applications')
+
+#--------------------------------
+#   "MY APPLICATIONS" 
+#--------------------------------
+
+@jobs_bp.route('/my-applications')
+@login_required
+def my_applications():
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT jobs.title, applications.status
+        FROM applications
+        JOIN jobs ON jobs.id = applications.job_id
+        WHERE applications.user_id=?
+    """, (current_user.id,))
+
+    data = cursor.fetchall()
+
+    return render_template("applications.html", data=data)

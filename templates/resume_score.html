@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<h2>Resume Score</h2>
+
+<div class="card p-4 text-center">
+    <h1>{{ score }}%</h1>
+
+    <div class="progress mt-3">
+        <div class="progress-bar bg-success" style="width: {{ score }}%"></div>
+    </div>
+
+    <p class="mt-3">Skills detected:</p>
+    <p>{{ skills }}</p>
+</div>
+
+{% endblock %}
