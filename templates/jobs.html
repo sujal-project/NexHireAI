@@ -3,6 +3,55 @@
 
 <h2>Jobs</h2>
 
+<!-- =========================
+   RECOMMENDED JOBS
+========================= -->
+<h4 class="mt-4">🤖 Recommended Jobs</h4>
+
+{% if recommended %}
+    {% for job, score in recommended %}
+    <div class="card p-3 mb-3">
+        <h5>{{ job.title }}</h5>
+        <p>{{ job.company }}</p>
+        <p><strong>Skills:</strong> {{ job.skills }}</p>
+
+        <div class="progress mb-2">
+            <div class="progress-bar bg-success" style="width: {{ score*100 }}%">
+                {{ (score*100)|round(0) }}%
+            </div>
+        </div>
+
+        <a href="/apply/{{ job.id }}" class="btn btn-sm btn-success">Apply</a>
+    </div>
+    {% endfor %}
+{% else %}
+    <p>No recommendations yet. Upload resume.</p>
+{% endif %}
+
+
+<!-- =========================
+   ALL JOBS
+========================= -->
+<h4 class="mt-5">💼 All Jobs</h4>
+
+{% for job in all_jobs %}
+<div class="card p-3 mb-2">
+    <h5>{{ job[1] }}</h5>
+    <p><strong>Company:</strong> {{ job[2] }}</p>
+    <p><strong>Skills:</strong> {{ job[3] }}</p>
+    <p><strong>Location:</strong> {{ job[5] }}</p>
+
+    <a href="/apply/{{ job[0] }}" class="btn btn-sm btn-primary">Apply</a>
+</div>
+{% endfor %}
+
+{% endblock %}
+
+<!-- {% extends "layout.html" %}
+{% block content %}
+
+<h2>Jobs</h2>
+
 <a href="/apply/{{ job.id }}" class="btn btn-sm btn-success">Apply</a>
 <a href="/add-job" class="btn btn-primary mb-3">Add Job</a>
 
@@ -15,4 +64,4 @@
 </div>
 {% endfor %}
 
-{% endblock %}
+{% endblock %} -->

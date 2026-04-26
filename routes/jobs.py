@@ -27,13 +27,54 @@ def extract_text(path):
 # -----------------------
 # JOB ROUTES
 # -----------------------
+
 @jobs_bp.route('/jobs')
 @login_required
 def jobs():
+
     conn = get_connection()
     cursor = conn.cursor()
+
+    # -----------------------
+    # GET ALL JOBS
+    # -----------------------
     cursor.execute("SELECT * FROM jobs")
-    return render_template("jobs.html", jobs=cursor.fetchall())
+    all_jobs = cursor.fetchall()
+
+    # -----------------------
+    # GET USER SKILLS
+    # -----------------------
+    cursor.execute("SELECT skills FROM resumes WHERE user_id=?", (current_user.id,))
+    res = cursor.fetchone()
+
+    recommended = []
+
+    if res:
+        user_skills = res[0].split(",")
+
+        # Convert jobs into simple objects
+        class JobObj:
+            def __init__(self, row):
+                self.id = row[0]
+                self.title = row[1]
+                self.company = row[2]
+                self.skills = row[3]
+                self.location = row[5]
+
+        job_objs = [JobObj(j) for j in all_jobs]
+
+        scored = match_jobs(user_skills, job_objs)
+
+        recommended = scored[:5]
+
+    return render_template("jobs.html", all_jobs=all_jobs, recommended=recommended)
+# @jobs_bp.route('/jobs')
+# @login_required
+# def jobs():
+#     conn = get_connection()
+#     cursor = conn.cursor()
+#     cursor.execute("SELECT * FROM jobs")
+#     return render_template("jobs.html", jobs=cursor.fetchall())
 
 
 @jobs_bp.route('/add-job', methods=['GET','POST'])
@@ -178,7 +219,7 @@ def upload_resume():
 # -----------------------
 # AI JOB RECOMMENDATION
 # -----------------------
-@jobs_bp.route('/recommended-jobs')
+# @jobs_bp.route('/recommended-jobs')
 @login_required
 def recommended_jobs():
 
