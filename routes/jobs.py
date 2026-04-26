@@ -71,6 +71,8 @@ def upload_resume():
 
     if request.method == 'POST':
 
+        file = request.files.get('resume')
+
         # # ❌ No file
         # if 'resume' not in request.files:
         #     return "No file uploaded"
