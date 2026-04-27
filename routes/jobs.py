@@ -219,7 +219,7 @@ def upload_resume():
 # -----------------------
 # AI JOB RECOMMENDATION
 # -----------------------
-# @jobs_bp.route('/recommended-jobs')
+@jobs_bp.route('/recommended-jobs')
 @login_required
 def recommended_jobs():
 
