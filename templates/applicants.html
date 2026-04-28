@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<h2>Applicants</h2>
+
+{% for a in applicants %}
+<div class="card p-3 mb-2">
+    <h5>{{ a[0] }}</h5>
+    <p>{{ a[1] }}</p>
+
+    <a href="{{ a[2] }}" target="_blank" class="btn btn-sm btn-success">
+        View Resume
+    </a>
+</div>
+{% endfor %}
+
+{% endblock %}

@@ -67,8 +67,19 @@ def jobs():
         recommended = scored[:5]
     else:
         user_skills = []
+    
+    cursor.execute("SELECT job_id FROM applications WHERE user_id=?", (current_user.id,))
+    user_apps = cursor.fetchall()
 
-    return render_template("jobs.html", all_jobs=all_jobs, recommended=recommended)
+    # convert to simple list
+    user_app_ids = [a[0] for a in user_apps]
+
+    return render_template(
+    "jobs.html",
+    all_jobs=all_jobs,
+    recommended=recommended,
+    current_user_applications=user_apps
+    )
 
 
 @jobs_bp.route('/add-job', methods=['GET','POST'])
@@ -289,18 +300,23 @@ def apply(job_id):
 
     conn = get_connection()
     cursor = conn.cursor()
+
+    # Get latest resume
+    cursor.execute("""
+    SELECT id FROM resumes WHERE user_id=?
+    """, (current_user.id,))
+    resume = cursor.fetchone()
+
+    if not resume:
+        return "Upload resume before applying"
+
+    resume_id = resume[0]
+
+    cursor.execute("""
+    INSERT INTO applications (user_id, job_id, status, resume_id)
+    VALUES (?, ?, ?, ?)
+    """, (current_user.id, job_id, "Applied", resume_id))
     
-    cursor.execute("""
-    SELECT * FROM applications WHERE user_id=? AND job_id=?
-    """, (current_user.id, job_id))
-
-    if cursor.fetchone():
-        return "Already applied"
-
-    cursor.execute("""
-        INSERT INTO applications (user_id, job_id, status)
-        VALUES (?, ?, ?)
-    """, (current_user.id, job_id, "Applied"))
 
     try:
         conn.commit()

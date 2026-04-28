@@ -41,7 +41,19 @@
     <p><strong>Skills:</strong> {{ job[3] }}</p>
     <p><strong>Location:</strong> {{ job[5] }}</p>
 
+{% set applied = false %}
+{% for app in current_user_applications %}
+    {% if app.job_id == job[0] %}
+        {% set applied = true %}
+    {% endif %}
+{% endfor %}
+
+{% if applied %}
+    <button class="btn btn-sm btn-success" disabled>Applied</button>
+{% else %}
     <a href="/apply/{{ job[0] }}" class="btn btn-sm btn-primary">Apply</a>
+{% endif %}
+
 </div>
 {% endfor %}
 

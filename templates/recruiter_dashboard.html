@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<h2>Recruiter Dashboard</h2>
+
+{% for job in jobs %}
+<div class="card p-3 mb-3">
+    <h4>{{ job[1] }}</h4>
+    <p>{{ job[2] }}</p>
+
+    <a href="/job-applicants/{{ job[0] }}" class="btn btn-primary">
+        View Applicants
+    </a>
+</div>
+{% endfor %}
+
+{% endblock %}
