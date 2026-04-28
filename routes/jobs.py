@@ -49,10 +49,9 @@ def jobs():
 
     recommended = []
 
-    if res:
+    if res and res[0]:
         user_skills = res[0].split(",")
 
-        # Convert jobs into simple objects
         class JobObj:
             def __init__(self, row):
                 self.id = row[0]
@@ -66,20 +65,19 @@ def jobs():
         scored = match_jobs(user_skills, job_objs)
 
         recommended = scored[:5]
+    else:
+        user_skills = []
 
     return render_template("jobs.html", all_jobs=all_jobs, recommended=recommended)
-# @jobs_bp.route('/jobs')
-# @login_required
-# def jobs():
-#     conn = get_connection()
-#     cursor = conn.cursor()
-#     cursor.execute("SELECT * FROM jobs")
-#     return render_template("jobs.html", jobs=cursor.fetchall())
 
 
 @jobs_bp.route('/add-job', methods=['GET','POST'])
 @login_required
 def add_job():
+
+    if current_user.role != "recruiter":
+        return "Unauthorized"
+    
     if request.method == 'POST':
         conn = get_connection()
         cursor = conn.cursor()
@@ -114,23 +112,14 @@ def upload_resume():
 
         file = request.files.get('resume')
 
-        # # ❌ No file
-        # if 'resume' not in request.files:
-        #     return "No file uploaded"
+        if not file or file.filename == '':
+            return "No file selected"
 
-        # file = request.files['resume']
+        if not allowed_file(file.filename):
+            return "Only PDF files allowed"
 
-        # # ❌ Empty filename
-        # if file.filename == '':
-        #     return "No selected file"
-
-        # # ❌ Invalid type
-        # if not allowed_file(file.filename):
-        #     return "Only PDF allowed"
-
-        # ✅ SAFE FILE NAME
         filename = secure_filename(file.filename)
-
+        
         # ✅ PREVENT OVERWRITE (MAIN FIX)
         unique_name = f"{current_user.id}_{filename}"
 
@@ -174,49 +163,6 @@ def upload_resume():
     return render_template("upload_resume.html")
 
 # -----------------------
-# RESUME UPLOAD OLD
-# -----------------------
-# @jobs_bp.route('/upload-resume', methods=['GET','POST'])
-# @login_required
-# def upload_resume():
-
-#     if request.method == 'POST':
-
-#         if 'resume' not in request.files:
-#             return "No file uploaded"
-
-#         file = request.files['resume']
-
-#         if file.filename == '':
-#             return "No selected file"
-
-#         if file and allowed_file(file.filename):
-
-#             filename = secure_filename(file.filename)
-#             path = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
-
-#             file.save(path)
-
-#             text = extract_text(path)
-#             skills = extract_skills(text)
-
-#             conn = get_connection()
-#             cursor = conn.cursor()
-
-#             cursor.execute("""
-#                 INSERT INTO resumes (user_id, file_path, extracted_text, skills)
-#                 VALUES (?, ?, ?, ?)
-#             """, (current_user.id, path, text, ",".join(skills)))
-
-#             conn.commit()
-
-#             return f"Extracted Skills: {skills}"
-
-#         return "Only PDF allowed"
-
-#     return render_template("upload_resume.html")
-
-# -----------------------
 # AI JOB RECOMMENDATION
 # -----------------------
 @jobs_bp.route('/recommended-jobs')
@@ -232,10 +178,23 @@ def recommended_jobs():
     if not res:
         return "Upload resume first"
 
-    user_skills = res[0].split(",")
-
+    if res and res[0]:
+        user_skills = res[0].split(",")
+    else:
+        user_skills = []
+    
     cursor.execute("SELECT * FROM jobs")
-    jobs = cursor.fetchall()
+    rows = cursor.fetchall()
+
+    class JobObj:
+        def __init__(self, row):
+            self.id = row[0]
+            self.title = row[1]
+            self.company = row[2]
+            self.skills = row[3]
+            self.location = row[5]
+
+    jobs = [JobObj(r) for r in rows]
 
     scored = match_jobs(user_skills, jobs)
 
@@ -257,13 +216,16 @@ def interview():
     if not res:
         return "Upload resume first"
 
-    skills = res[0].split(",")
+    if res and res[0]:
+        user_skills = res[0].split(",")
+    else:
+        user_skills = []
 
     cursor.execute("SELECT * FROM questions")
     questions = cursor.fetchall()
 
-    filtered = [q for q in questions if q.skill in skills]
-
+    filtered = [q for q in questions if q[1] in user_skills]
+    
     return render_template("interview.html", questions=filtered)
 
 # -----------------------
@@ -272,6 +234,9 @@ def interview():
 @jobs_bp.route('/admin')
 @login_required
 def admin():
+
+    if current_user.role != "recruiter":
+        return "Unauthorized"   
 
     conn = get_connection()
     cursor = conn.cursor()
@@ -305,12 +270,14 @@ def resume_score():
     if not res:
         return "Upload resume first"
 
-    skills = res[0].split(",")
+    if res and res[0]:
+        user_skills = res[0].split(",")
+    else:
+        user_skills = []
 
-    score = min(len(skills) * 15, 100)
+    score = min(len(user_skills) * 15, 100)
 
-    return render_template("resume_score.html", score=score, skills=skills)
-
+    return render_template("resume_score.html", score=score, skills=user_skills)
 
 #---------------------------
 #   APPLY TO JOB FEATURE
@@ -322,13 +289,24 @@ def apply(job_id):
 
     conn = get_connection()
     cursor = conn.cursor()
+    
+    cursor.execute("""
+    SELECT * FROM applications WHERE user_id=? AND job_id=?
+    """, (current_user.id, job_id))
+
+    if cursor.fetchone():
+        return "Already applied"
 
     cursor.execute("""
         INSERT INTO applications (user_id, job_id, status)
         VALUES (?, ?, ?)
     """, (current_user.id, job_id, "Applied"))
 
-    conn.commit()
+    try:
+        conn.commit()
+    except:
+        conn.rollback()
+        return "Application failed"
 
     return redirect('/my-applications')
 
