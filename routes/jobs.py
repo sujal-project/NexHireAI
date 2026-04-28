@@ -78,7 +78,7 @@ def jobs():
     "jobs.html",
     all_jobs=all_jobs,
     recommended=recommended,
-    current_user_applications=user_apps
+    current_user_app_ids=user_app_ids
     )
 
 
@@ -347,3 +347,49 @@ def my_applications():
     data = cursor.fetchall()
 
     return render_template("applications.html", data=data)
+
+#----------------------------------
+#   RECRUITER DASHBOARD ROUTE
+#----------------------------------
+
+@jobs_bp.route('/recruiter-dashboard')
+@login_required
+def recruiter_dashboard():
+
+    if current_user.role != "recruiter":
+        return "Unauthorized"
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    # Get recruiter jobs
+    cursor.execute("SELECT * FROM jobs WHERE recruiter_id=?", (current_user.id,))
+    jobs = cursor.fetchall()
+
+    return render_template("recruiter_dashboard.html", jobs=jobs)
+
+#----------------------------------
+#    VIEW APPLICANTS FOR A JOB
+#----------------------------------
+
+@jobs_bp.route('/job-applicants/<int:job_id>')
+@login_required
+def job_applicants(job_id):
+
+    if current_user.role != "recruiter":
+        return "Unauthorized"
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT users.name, users.email, resumes.file_path
+        FROM applications
+        JOIN users ON users.id = applications.user_id
+        JOIN resumes ON resumes.id = applications.resume_id
+        WHERE applications.job_id=?
+    """, (job_id,))
+
+    applicants = cursor.fetchall()
+
+    return render_template("applicants.html", applicants=applicants)

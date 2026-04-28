@@ -70,15 +70,46 @@ def login():
             return render_template("login.html", error="Wrong password")
 
         login_user(User(user))
-        return redirect('/dashboard')
+
+        # ✅ ROLE BASED REDIRECT
+        if user[4] == "recruiter":
+            return redirect('/recruiter-dashboard')
+        else:
+            return redirect('/dashboard')
 
     return render_template("login.html")
+
+
+# @auth_bp.route('/login', methods=['GET','POST'])
+# def login():
+#     if request.method == 'POST':
+#         conn = get_connection()
+#         cursor = conn.cursor()
+
+#         cursor.execute("SELECT * FROM users WHERE email=?", (request.form['email'],))
+#         user = cursor.fetchone()
+
+#         if not user:
+#             return render_template("login.html", error="User not found")
+
+#         if not check_password_hash(user[3], request.form['password']):
+#             return render_template("login.html", error="Wrong password")
+
+#         login_user(User(user))
+
+#         # 🔥 ROLE BASED REDIRECT (ADD THIS)
+#         if user[4] == "recruiter":
+#             return redirect('/recruiter-dashboard')
+#         else:
+#             return redirect('/dashboard')
+
+#     return render_template("login.html")
 
 
 @auth_bp.route('/dashboard')
 @login_required
 def dashboard():
-    
+
     if current_user.role == "recruiter":
         return redirect('/recruiter-dashboard')
     else:
