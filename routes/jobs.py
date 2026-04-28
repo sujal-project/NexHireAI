@@ -287,7 +287,19 @@ def chatbot():
 
     return {"reply": reply}
 
+#----------- ressume score ----------
 
+@jobs_bp.route('/resume-score')
+@login_required
+def resume_score():
+    return "<h2>Resume Score Feature Coming Soon</h2>"
+
+#------------ interview prep ----------
+
+@jobs_bp.route('/interview-prep')
+@login_required
+def interview_prep():
+    return "<h2>Interview Preparation Coming Soon</h2>"
 
 
 
