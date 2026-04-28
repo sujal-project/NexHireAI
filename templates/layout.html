@@ -2,7 +2,7 @@
 <html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8">
-    <title>Job Portal</title>
+    <title>NexHireAI</title>
 
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -12,7 +12,7 @@
 
 <!-- 🔵 NAVBAR -->
 <nav class="navbar">
-    <div class="logo">💼 JobPortal</div>
+    <div class="logo">NexHireAI</div>
 
     <div class="nav-links">
         {% if current_user.is_authenticated %}
@@ -46,7 +46,7 @@
 </div>
 
 <!-- 🤖 CHATBOT BUTTON -->
-<div class="chatbot-btn" onclick="toggleChat()">💬</div>
+<div class="chatbot-btn" onclick="toggleChat()">🤖Chatbot</div>
 
 <!-- CHAT WINDOW -->
 <div id="chatbox" class="chatbox hidden">
