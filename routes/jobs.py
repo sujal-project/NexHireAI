@@ -73,8 +73,26 @@ def recruiter_dashboard():
     cursor.execute("SELECT * FROM jobs WHERE recruiter_id=?", (current_user.id,))
     jobs = cursor.fetchall()
 
-    return render_template("recruiter_dashboard.html", jobs=jobs)
+    # 📊 FIX: prepare chart data safely
+    job_titles = []
+    job_counts = []
 
+    for job in jobs:
+        job_titles.append(job[1])  # title
+
+        cursor.execute("""
+            SELECT COUNT(*) FROM applications WHERE job_id=?
+        """, (job[0],))
+
+        count = cursor.fetchone()[0]
+        job_counts.append(count)
+
+    return render_template(
+        "recruiter_dashboard.html",
+        jobs=jobs,
+        job_titles=job_titles,
+        job_counts=job_counts
+    )
 
 #----------------  ADD JOB-----------------
 

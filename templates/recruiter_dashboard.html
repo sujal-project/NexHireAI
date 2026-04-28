@@ -1,4 +1,72 @@
 {% extends "layout.html" %}
+
+{% block content %}
+
+<h2>Recruiter Dashboard</h2>
+
+<!-- 📊 CHART SECTION -->
+<div style="width: 100%; max-width: 700px; margin-bottom: 30px;">
+    <canvas id="jobChart"></canvas>
+</div>
+
+<!-- 💼 JOB LIST -->
+<h3>Your Posted Jobs</h3>
+
+{% if jobs and jobs|length > 0 %}
+
+    {% for job in jobs %}
+    <div class="card">
+        <h3>{{ job[1] }}</h3>
+        <p><b>Company:</b> {{ job[2] }}</p>
+        <p><b>Location:</b> {{ job[5] }}</p>
+
+        <a href="/job-applicants/{{ job[0] }}" class="btn btn-primary">
+            View Applicants
+        </a>
+    </div>
+    {% endfor %}
+
+{% else %}
+    <p>No jobs posted yet.</p>
+{% endif %}
+
+<!-- 📊 SAFE CHART SCRIPT -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+const labels = {{ job_titles | default([]) | tojson | safe }};
+const data = {{ job_counts | default([]) | tojson | safe }};
+
+const ctx = document.getElementById('jobChart');
+
+if (ctx) {
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels.length ? labels : ["No Jobs"],
+            datasets: [{
+                label: 'Applications',
+                data: data.length ? data : [0],
+                backgroundColor: '#0073b1'
+            }]
+        }
+    });
+}
+</script>
+
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+<!-- {% extends "layout.html" %}
 {% block content %}
 
 <h2>Recruiter Dashboard</h2>
@@ -30,4 +98,4 @@ new Chart(ctx, {
 </div>
 {% endfor %}
 
-{% endblock %}
+{% endblock %} -->
