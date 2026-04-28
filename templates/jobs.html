@@ -48,7 +48,21 @@
     {% endif %}
 {% endfor %}
 
-{% if applied %}
+
+{% if job[0] in current_user_app_ids %}
+    <button class="btn btn-sm btn-success" disabled>Applied</button>
+{% else %}
+    <a href="/apply/{{ job[0] }}" class="btn btn-sm btn-primary">Apply</a>
+{% endif %}
+
+
+<!-- {% if job[0] in current_user_app_ids %}
+    <button class="btn btn-sm btn-success" disabled>Applied</button>
+{% else %}
+    <a href="/apply/{{ job[0] }}" class="btn btn-sm btn-primary">Apply</a>
+{% endif %} -->
+
+<!-- {% if applied %}
     <button class="btn btn-sm btn-success" disabled>Applied</button>
 {% else %}
     <a href="/apply/{{ job[0] }}" class="btn btn-sm btn-primary">Apply</a>
@@ -58,4 +72,4 @@
 {% endfor %}
 
 {% endblock %}
-
+ -->

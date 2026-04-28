@@ -69,17 +69,21 @@ def jobs():
         user_skills = []
     
     cursor.execute("SELECT job_id FROM applications WHERE user_id=?", (current_user.id,))
-    user_apps = cursor.fetchall()
+    apps = cursor.fetchall()
 
-    # convert to simple list
-    user_app_ids = [a[0] for a in user_apps]
+    # SAFEST FIX (type correction)
+    current_user_app_ids = [int(a[0]) for a in apps]
+
+    print("APPLIED IDS:", current_user_app_ids)  # 🔥 DEBUG LINE (temporary)
 
     return render_template(
-    "jobs.html",
-    all_jobs=all_jobs,
-    recommended=recommended,
-    current_user_app_ids=user_app_ids
+        "jobs.html",
+        all_jobs=all_jobs,
+        recommended=recommended,
+        current_user_app_ids=current_user_app_ids
     )
+
+
 
 
 @jobs_bp.route('/add-job', methods=['GET','POST'])
@@ -134,7 +138,7 @@ def upload_resume():
         # ✅ PREVENT OVERWRITE (MAIN FIX)
         unique_name = f"{current_user.id}_{filename}"
 
-        path = os.path.join(current_app.config['UPLOAD_FOLDER'], unique_name)
+        path = os.path.join(current_app.config['UPLOAD_FOLDER'],filename)
 
         # ✅ SAVE FILE
         file.save(path)
@@ -162,7 +166,7 @@ def upload_resume():
             VALUES (?, ?, ?, ?)
         """, (
             current_user.id,
-            path,
+            filename,
             text,
             ",".join(skills)
         ))
@@ -297,9 +301,18 @@ def resume_score():
 @jobs_bp.route('/apply/<int:job_id>')
 @login_required
 def apply(job_id):
-
+     
     conn = get_connection()
     cursor = conn.cursor()
+
+    cursor.execute("""
+    SELECT * FROM applications WHERE user_id=? AND job_id=?
+    """, (current_user.id, job_id))
+
+    if cursor.fetchone():
+        return "Already applied"
+
+
 
     # Get latest resume
     cursor.execute("""
@@ -348,6 +361,18 @@ def my_applications():
 
     return render_template("applications.html", data=data)
 
+#---------------------------
+#   RESUME VIEW ROUTE
+#---------------------------
+
+from flask import send_from_directory
+
+@jobs_bp.route('/resume/<filename>')
+@login_required
+def view_resume(filename):
+    return send_from_directory(current_app.config['UPLOAD_FOLDER'], filename)
+
+
 #----------------------------------
 #   RECRUITER DASHBOARD ROUTE
 #----------------------------------
@@ -357,7 +382,7 @@ def my_applications():
 def recruiter_dashboard():
 
     if current_user.role != "recruiter":
-        return "Unauthorized"
+        return "Unauthorized", 403
 
     conn = get_connection()
     cursor = conn.cursor()
@@ -377,10 +402,17 @@ def recruiter_dashboard():
 def job_applicants(job_id):
 
     if current_user.role != "recruiter":
-        return "Unauthorized"
+        return "Unauthorized", 403
 
     conn = get_connection()
     cursor = conn.cursor()
+
+     # ownership check
+    cursor.execute("SELECT recruiter_id FROM jobs WHERE id=?", (job_id,))
+    owner = cursor.fetchone()
+
+    if not owner or owner[0] != current_user.id:
+        return "Unauthorized", 403
 
     cursor.execute("""
         SELECT users.name, users.email, resumes.file_path
