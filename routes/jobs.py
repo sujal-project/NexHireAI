@@ -58,6 +58,24 @@ def jobs():
         current_user_app_ids=current_user_app_ids
     )
 
+#------------- recruiter-dashboard ----------
+
+@jobs_bp.route('/recruiter-dashboard')
+@login_required
+def recruiter_dashboard():
+
+    if current_user.role != "recruiter":
+        return "Unauthorized", 403
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT * FROM jobs WHERE recruiter_id=?", (current_user.id,))
+    jobs = cursor.fetchall()
+
+    return render_template("recruiter_dashboard.html", jobs=jobs)
+
+
 #----------------  ADD JOB-----------------
 
 @jobs_bp.route('/add-job', methods=['GET', 'POST'])
