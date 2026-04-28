@@ -1,23 +1,45 @@
 {% extends "layout.html" %}
+
 {% block content %}
 
-<h2>Post a Job</h2>
+<div class="container mt-4">
 
-<form method="POST" class="card form">
+    <h2 class="mb-4">Post a New Job</h2>
 
-    <input type="text" name="title" placeholder="Job Title" required>
+    <form method="POST">
 
-    <input type="text" name="company" placeholder="Company Name" required>
+        <div class="mb-3">
+            <label>Job Title</label>
+            <input type="text" name="title" class="form-control" required>
+        </div>
 
-    <input type="text" name="skills" placeholder="Required Skills (comma separated)" required>
+        <div class="mb-3">
+            <label>Company</label>
+            <input type="text" name="company" class="form-control" required>
+        </div>
 
-    <input type="text" name="location" placeholder="Location" required>
+        <div class="mb-3">
+            <label>Skills (comma separated)</label>
+            <input type="text" name="skills" class="form-control" required>
+        </div>
 
-    <textarea name="description" placeholder="Job Description" rows="5" required></textarea>
+        <div class="mb-3">
+            <label>Location</label>
+            <input type="text" name="location" class="form-control" required>
+        </div>
 
-    <button type="submit" class="btn primary">Post Job</button>
+        <div class="mb-3">
+            <label>Description</label>
+            <textarea name="description" class="form-control"></textarea>
+        </div>
 
-</form>
+        <button type="submit" class="btn btn-success">
+            Post Job
+        </button>
+
+    </form>
+
+</div>
 
 {% endblock %}
 
@@ -26,21 +48,3 @@
 
 
 
-
-<!-- {% extends "layout.html" %}
-{% block content %}
-
-<h2>Add Job</h2>
-
-<form method="POST">
-    <input name="title" placeholder="Title" class="form-control mb-2">
-    <input name="company" placeholder="Company" class="form-control mb-2">
-    <input name="skills" placeholder="Skills (comma separated)" class="form-control mb-2">
-    <input name="salary" placeholder="Salary" class="form-control mb-2">
-    <input name="location" placeholder="Location" class="form-control mb-2">
-    <textarea name="description" placeholder="Description" class="form-control mb-2"></textarea>
-
-    <button class="btn btn-success">Post Job</button>
-</form>
-
-{% endblock %} -->
