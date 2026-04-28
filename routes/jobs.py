@@ -70,29 +70,38 @@ def recruiter_dashboard():
     conn = get_connection()
     cursor = conn.cursor()
 
+    # ✅ Get jobs
     cursor.execute("SELECT * FROM jobs WHERE recruiter_id=?", (current_user.id,))
     jobs = cursor.fetchall()
 
-    # 📊 FIX: prepare chart data safely
+    # ✅ Get application counts in ONE query
+    cursor.execute("""
+        SELECT job_id, COUNT(*) 
+        FROM applications 
+        WHERE job_id IN (
+            SELECT id FROM jobs WHERE recruiter_id=?
+        )
+        GROUP BY job_id
+    """, (current_user.id,))
+
+    counts = cursor.fetchall()
+
+    # convert to dict {job_id: count}
+    count_map = {row[0]: row[1] for row in counts}
+
     job_titles = []
     job_counts = []
 
     for job in jobs:
         job_titles.append(job[1])  # title
-
-        cursor.execute("""
-            SELECT COUNT(*) FROM applications WHERE job_id=?
-        """, (job[0],))
-
-        count = cursor.fetchone()[0]
-        job_counts.append(count)
+        job_counts.append(count_map.get(job[0], 0))
 
     return render_template(
-        "recruiter_dashboard.html",
-        jobs=jobs,
-        job_titles=job_titles,
-        job_counts=job_counts
-    )
+         "recruiter_dashboard.html",
+         jobs=jobs,
+         job_titles=job_titles or [],
+         job_counts=job_counts or []
+)
 
 #----------------  ADD JOB-----------------
 
