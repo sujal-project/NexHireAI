@@ -11,7 +11,7 @@ class Config:
 
     DB_CONNECTION_STRING = (
         "DRIVER={ODBC Driver 17 for SQL Server};"
-        "SERVER=localhost\\SQLEXPRESS;" 
+        "SERVER=localhost\\SQLEXPRESS;"
         "DATABASE=NexHireAI;"
         "Trusted_Connection=yes;"
     )
@@ -19,20 +19,18 @@ class Config:
 # import os
 
 # class Config:
-#     SECRET_KEY = "supersecretkey"   # change in production
+#     SECRET_KEY = "supersecretkey"
 
-#     # Upload config
-#     UPLOAD_FOLDER = os.path.join(os.getcwd(), "uploads")
-#     MAX_CONTENT_LENGTH = 5 * 1024 * 1024  # 5MB max file
+#     BASE_DIR = os.getcwd()
+#     UPLOAD_FOLDER = os.path.join(BASE_DIR, "uploads")
 
-#     # Allowed file types
+#     MAX_CONTENT_LENGTH = 5 * 1024 * 1024
 #     ALLOWED_EXTENSIONS = {"pdf"}
 
-#     # Database (ODBC)
-    
 #     DB_CONNECTION_STRING = (
 #         "DRIVER={ODBC Driver 17 for SQL Server};"
-#         "SERVER=localhost\\SQLEXPRESS;"
+#         "SERVER=localhost\\SQLEXPRESS;" 
 #         "DATABASE=NexHireAI;"
 #         "Trusted_Connection=yes;"
 #     )
+

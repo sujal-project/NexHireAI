@@ -1,204 +1,90 @@
-/* =========================
-   GLOBAL
-========================= */
 :root {
-    --primary: #4f46e5;
-    --primary-dark: #4338ca;
-    --success: #22c55e;
-    --bg: #f8fafc;
-    --card-bg: rgba(255, 255, 255, 0.7);
-    --text: #0f172a;
-    --muted: #64748b;
-    --border: #e2e8f0;
+    --bg: #f3f2ef;
+    --text: #000;
+    --card: #fff;
+}
+
+[data-theme="dark"] {
+    --bg: #181818;
+    --text: #fff;
+    --card: #242424;
 }
 
 body {
-    background: linear-gradient(135deg, #eef2ff, #f8fafc);
-    font-family: 'Inter', 'Segoe UI', sans-serif;
+    background: var(--bg);
     color: var(--text);
+    font-family: Arial;
     margin: 0;
 }
 
-/* Smooth feel */
-* {
-    transition: all 0.2s ease;
-}
-
-/* =========================
-   SIDEBAR (GLASS STYLE)
-========================= */
-.sidebar {
-    height: 100vh;
-    width: 250px;
-    position: fixed;
-    padding: 24px;
-    
-    background: rgba(15, 23, 42, 0.85);
-    backdrop-filter: blur(12px);
-    
-    color: white;
-    border-right: 1px solid rgba(255,255,255,0.1);
-}
-
-.sidebar h4 {
-    font-weight: 700;
-    margin-bottom: 30px;
-    letter-spacing: 0.5px;
-}
-
-.sidebar a {
-    color: #cbd5f5;
+/* NAVBAR */
+.navbar {
     display: flex;
-    align-items: center;
-    gap: 10px;
-    margin: 10px 0;
-    padding: 10px 12px;
-    border-radius: 10px;
+    justify-content: space-between;
+    padding: 15px;
+    background: #0073b1;
+    color: white;
+}
+
+.nav-links a {
+    margin: 0 10px;
+    color: white;
     text-decoration: none;
 }
 
-.sidebar a:hover {
-    background: rgba(255,255,255,0.08);
-    color: #fff;
-    transform: translateX(4px);
-}
-
-/* =========================
-   MAIN CONTENT
-========================= */
-.col-10 {
-    margin-left: 250px;
-    padding: 40px;
-}
-
-/* =========================
-   CARDS (GLASS + DEPTH)
-========================= */
-.card {
-    background: var(--card-bg);
-    backdrop-filter: blur(10px);
-    
-    border-radius: 16px;
-    border: 1px solid var(--border);
-    
-    box-shadow: 
-        0 10px 30px rgba(0,0,0,0.05),
-        inset 0 1px 0 rgba(255,255,255,0.6);
-
+/* CONTAINER */
+.container {
     padding: 20px;
 }
 
-.card:hover {
-    transform: translateY(-6px);
-    box-shadow: 
-        0 20px 40px rgba(0,0,0,0.08);
+/* CARD */
+.card {
+    background: var(--card);
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 10px;
 }
 
-/* =========================
-   BUTTONS
-========================= */
+/* BUTTON */
 .btn {
-    border-radius: 10px;
-    padding: 10px 18px;
-    font-weight: 500;
+    padding: 8px 12px;
     border: none;
+    border-radius: 5px;
+    cursor: pointer;
 }
 
-.btn-primary {
-    background: linear-gradient(135deg, var(--primary), #6366f1);
+.btn-primary { background: #0073b1; color: white; }
+.btn-success { background: green; color: white; }
+
+/* CHATBOT */
+.chatbot-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: #0073b1;
     color: white;
+    padding: 15px;
+    border-radius: 50%;
+    cursor: pointer;
 }
 
-.btn-primary:hover {
-    background: linear-gradient(135deg, var(--primary-dark), #4f46e5);
-    transform: scale(1.03);
-}
-
-.btn-success {
-    background: linear-gradient(135deg, var(--success), #4ade80);
-    color: white;
-}
-
-.btn-success:hover {
-    transform: scale(1.03);
-}
-
-/* =========================
-   FORMS
-========================= */
-.form-control {
+.chatbox {
+    position: fixed;
+    bottom: 80px;
+    right: 20px;
+    width: 300px;
+    background: white;
     border-radius: 10px;
-    border: 1px solid var(--border);
-    padding: 12px;
-    background: white;
+    padding: 10px;
 }
 
-.form-control:focus {
-    border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
-}
+.hidden { display: none; }
 
-/* =========================
-   PROGRESS BAR
-========================= */
-.progress {
-    height: 18px;
-    border-radius: 999px;
-    background: #e5e7eb;
-}
+.user { text-align: right; color: blue; }
+.bot { text-align: left; color: green; }
 
-.progress-bar {
-    background: linear-gradient(90deg, #4f46e5, #6366f1);
-    font-size: 11px;
-    font-weight: 600;
-}
 
-/* =========================
-   BADGES
-========================= */
-.badge {
-    border-radius: 999px;
-    padding: 6px 12px;
-    font-size: 12px;
-}
 
-.badge-primary {
-    background: #eef2ff;
-    color: #4f46e5;
-}
 
-/* =========================
-   TABLE
-========================= */
-table {
-    background: white;
-    border-radius: 12px;
-    overflow: hidden;
-    border: 1px solid var(--border);
-}
 
-table th {
-    background: #f1f5f9;
-    font-weight: 600;
-}
 
-table td, table th {
-    padding: 12px;
-}
-
-/* =========================
-   RESPONSIVE
-========================= */
-@media (max-width: 768px) {
-
-    .sidebar {
-        position: relative;
-        width: 100%;
-        height: auto;
-    }
-
-    .col-10 {
-        margin-left: 0;
-        padding: 20px;
-    }
-}

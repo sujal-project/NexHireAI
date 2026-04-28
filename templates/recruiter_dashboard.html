@@ -3,11 +3,27 @@
 
 <h2>Recruiter Dashboard</h2>
 
-{% for job in jobs %}
-<div class="card p-3 mb-3">
-    <h4>{{ job[1] }}</h4>
-    <p>{{ job[2] }}</p>
+<canvas id="jobChart"></canvas>
 
+<script>
+const ctx = document.getElementById('jobChart');
+
+new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: {{ job_titles | tojson }},
+        datasets: [{
+            label: 'Applications',
+            data: {{ job_counts | tojson }},
+            backgroundColor: 'blue'
+        }]
+    }
+});
+</script>
+
+{% for job in jobs %}
+<div class="card">
+    <h3>{{ job[1] }}</h3>
     <a href="/job-applicants/{{ job[0] }}" class="btn btn-primary">
         View Applicants
     </a>

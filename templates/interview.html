@@ -1,6 +1,24 @@
 {% extends "layout.html" %}
 {% block content %}
 
+<h2>Interview Questions</h2>
+
+{% for q in questions %}
+<div class="card">
+    <p><b>{{ q[2] }}</b></p>
+    <small>Skill: {{ q[1] }} | Difficulty: {{ q[3] }}</small>
+</div>
+{% endfor %}
+
+{% endblock %}
+
+
+
+
+
+<!-- {% extends "layout.html" %}
+{% block content %}
+
 <h2>Interview Preparation</h2>
 
 {% for q in questions %}
@@ -10,4 +28,4 @@
 </div>
 {% endfor %}
 
-{% endblock %}
+{% endblock %} -->

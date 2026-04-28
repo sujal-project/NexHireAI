@@ -1,12 +1,49 @@
 {% extends "layout.html" %}
 {% block content %}
 
-<h2>Jobs</h2>
+<h2>All Jobs</h2>
 
-<!-- =========================
+{% for job in all_jobs %}
+<div class="card">
+    <h3>{{ job[1] }}</h3>
+    <p><b>Company:</b> {{ job[2] }}</p>
+    <p><b>Skills:</b> {{ job[3] }}</p>
+    <p><b>Location:</b> {{ job[5] }}</p>
+
+    {% if job[0] in current_user_app_ids %}
+        <button class="btn success" disabled>Applied</button>
+    {% else %}
+        <a href="/apply/{{ job[0] }}" class="btn primary">Apply</a>
+    {% endif %}
+</div>
+{% endfor %}
+
+<hr>
+
+<h2>Recommended Jobs</h2>
+
+{% for job in recommended %}
+<div class="card highlight">
+    <h3>{{ job.title }}</h3>
+    <p>{{ job.company }}</p>
+    <p>{{ job.skills }}</p>
+</div>
+{% endfor %}
+
+{% endblock %}
+
+
+
+
+
+<!-- {% extends "layout.html" %}
+{% block content %}
+
+<h2>Jobs</h2>
+ =========================
    RECOMMENDED JOBS
 ========================= -->
-<h4 class="mt-4">🤖 Recommended Jobs</h4>
+<!-- <h4 class="mt-4">🤖 Recommended Jobs</h4>
 
 {% if recommended %}
     {% for job, score in recommended %}
@@ -29,10 +66,10 @@
 {% endif %}
 
 
-<!-- =========================
+=========================
    ALL JOBS
 ========================= -->
-<h4 class="mt-5">💼 All Jobs</h4>
+<!-- <h4 class="mt-5">💼 All Jobs</h4>
 
 {% for job in all_jobs %}
 <div class="card p-3 mb-2">
@@ -53,7 +90,7 @@
     <button class="btn btn-sm btn-success" disabled>Applied</button>
 {% else %}
     <a href="/apply/{{ job[0] }}" class="btn btn-sm btn-primary">Apply</a>
-{% endif %}
+{% endif %} -->
 
 
 <!-- {% if job[0] in current_user_app_ids %}

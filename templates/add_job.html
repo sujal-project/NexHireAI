@@ -1,6 +1,35 @@
 {% extends "layout.html" %}
 {% block content %}
 
+<h2>Post a Job</h2>
+
+<form method="POST" class="card form">
+
+    <input type="text" name="title" placeholder="Job Title" required>
+
+    <input type="text" name="company" placeholder="Company Name" required>
+
+    <input type="text" name="skills" placeholder="Required Skills (comma separated)" required>
+
+    <input type="text" name="location" placeholder="Location" required>
+
+    <textarea name="description" placeholder="Job Description" rows="5" required></textarea>
+
+    <button type="submit" class="btn primary">Post Job</button>
+
+</form>
+
+{% endblock %}
+
+
+
+
+
+
+
+<!-- {% extends "layout.html" %}
+{% block content %}
+
 <h2>Add Job</h2>
 
 <form method="POST">
@@ -14,4 +43,4 @@
     <button class="btn btn-success">Post Job</button>
 </form>
 
-{% endblock %}
+{% endblock %} -->

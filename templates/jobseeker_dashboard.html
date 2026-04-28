@@ -2,6 +2,58 @@
 {% block content %}
 
 <h2>Welcome, {{ current_user.name }}</h2>
+
+<div class="grid">
+
+    <div class="card">
+        <h3>Find Jobs</h3>
+        <p>Browse and apply for jobs</p>
+        <a href="/jobs" class="btn primary">View Jobs</a>
+    </div>
+
+    <div class="card">
+        <h3>My Applications</h3>
+        <p>Track your job applications</p>
+        <a href="/my-applications" class="btn primary">View Applications</a>
+    </div>
+
+    <div class="card">
+        <h3>Upload Resume</h3>
+        <p>Improve your job matches</p>
+        <a href="/upload-resume" class="btn primary">Upload</a>
+    </div>
+
+    <div class="card">
+        <h3>Resume Score</h3>
+        <p>Check your resume strength</p>
+        <a href="/resume-score" class="btn primary">Check Score</a>
+    </div>
+
+    <div class="card">
+        <h3>Interview Prep</h3>
+        <p>Practice questions</p>
+        <a href="/interview" class="btn primary">Start Practice</a>
+    </div>
+
+</div>
+
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- {% extends "layout.html" %}
+{% block content %}
+
+<h2>Welcome, {{ current_user.name }}</h2>
 <p class="text-muted">Your career hub</p>
 
 <div class="row mt-4">
@@ -18,7 +70,7 @@
             <h5>Jobs</h5>
             <a href="/jobs" class="btn btn-success">View Jobs</a>
             <!-- <a href="/recommended-jobs" class="btn btn-success">View</a> -->
-        </div>
+ <!--       </div>
     </div>
 
     <div class="col-md-3">
@@ -55,4 +107,4 @@
 
 </div>
 
-{% endblock %}
+{% endblock %} -->

@@ -1,0 +1,39 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<h2>My Applications</h2>
+
+{% if applications %}
+    {% for app in applications %}
+    <div class="card">
+        <h3>{{ app.title }}</h3>
+        <p><b>Company:</b> {{ app.company }}</p>
+        <p><b>Status:</b> {{ app.status }}</p>
+        <p><b>Location:</b> {{ app.location }}</p>
+    </div>
+    {% endfor %}
+{% else %}
+    <p>No applications yet.</p>
+{% endif %}
+
+{% endblock %}
+
+
+
+
+
+
+
+<!-- {% extends "layout.html" %}
+{% block content %}
+
+<h2>My Applications</h2>
+
+{% for app in data %}
+<div class="card p-3 mb-2">
+    <h5>{{ app[0] }}</h5>
+    <span class="badge bg-info">{{ app[1] }}</span>
+</div>
+{% endfor %}
+
+{% endblock %} -->

@@ -3,6 +3,30 @@
 
 <h2>Resume Score</h2>
 
+<div class="card">
+    <h3>Score: {{ score }}/100</h3>
+
+    <h4>Extracted Skills:</h4>
+    <ul>
+        {% for s in skills %}
+            <li>{{ s }}</li>
+        {% endfor %}
+    </ul>
+</div>
+
+{% endblock %}
+
+
+
+
+
+
+
+<!-- {% extends "layout.html" %}
+{% block content %}
+
+<h2>Resume Score</h2>
+
 <div class="card p-4 text-center">
     <h1>{{ score }}%</h1>
 
@@ -14,4 +38,4 @@
     <p>{{ skills }}</p>
 </div>
 
-{% endblock %}
+{% endblock %} -->

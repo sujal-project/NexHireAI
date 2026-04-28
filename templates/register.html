@@ -1,4 +1,31 @@
-<!DOCTYPE html>
+{% extends "layout.html" %}
+{% block content %}
+
+<h2>Register</h2>
+
+<form method="POST" class="card form">
+    <input type="text" name="name" placeholder="Name" required>
+    <input type="email" name="email" placeholder="Email" required>
+    <input type="password" name="password" placeholder="Password" required>
+
+    <select name="role">
+        <option value="jobseeker">Job Seeker</option>
+        <option value="recruiter">Recruiter</option>
+    </select>
+
+    <button type="submit" class="btn success">Register</button>
+</form>
+
+{% endblock %}
+
+
+
+
+
+
+
+
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -24,4 +51,4 @@
 </form>
 
 </body>
-</html>
+</html> -->
