@@ -287,7 +287,7 @@ def chatbot():
 
     return {"reply": reply}
 
-#----------- ressume score ----------
+#----------- resume score ----------
 
 @jobs_bp.route('/resume-score')
 @login_required
