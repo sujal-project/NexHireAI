@@ -31,7 +31,8 @@ def jobs():
     cursor.execute("SELECT * FROM jobs")
     all_jobs = cursor.fetchall()
 
-    cursor.execute("SELECT skills FROM resumes WHERE user_id=?", (current_user.id,))
+    cursor.execute("SELECT extracted_skills FROM resumes WHERE user_id=?", (current_user.id,))    
+    
     res = cursor.fetchone()
 
     recommended = []
@@ -133,7 +134,31 @@ def add_job():
 
     return render_template("add_job.html")
 
+# ---------------- JOB APPLICANTS ----------------
+@jobs_bp.route('/job-applicants/<int:job_id>')
+@login_required
+def job_applicants(job_id):
 
+    if current_user.role != "recruiter":
+        return "Unauthorized", 403
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT 
+            users.name, 
+            users.email, 
+            resumes.file_name
+        FROM applications
+        JOIN users ON users.id = applications.user_id
+        LEFT JOIN resumes ON resumes.user_id = users.id
+        WHERE applications.job_id = ?
+    """, (job_id,))
+
+    applicants = cursor.fetchall()
+
+    return render_template("applicants.html", applicants=applicants)
 
 # ---------------- APPLY ----------------
 @jobs_bp.route('/apply/<int:job_id>')
@@ -221,9 +246,14 @@ def upload_resume():
         cursor.execute("DELETE FROM resumes WHERE user_id=?", (current_user.id,))
 
         cursor.execute("""
-        INSERT INTO resumes (user_id,file_path,extracted_text,skills)
+        INSERT INTO resumes (user_id, file_name, extracted_skills, score)
         VALUES (?,?,?,?)
-        """, (current_user.id, unique_name, text, ",".join(skills)))
+        """, (
+            current_user.id,
+            unique_name,
+            ",".join(skills),
+            0
+        ))
 
         conn.commit()
 
