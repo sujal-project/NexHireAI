@@ -7,10 +7,18 @@
 <div class="card">
     <h4>{{ a[0] }}</h4>
     <p>{{ a[1] }}</p>
-
-    <a href="/resume/{{ a[2] }}" target="_blank" class="btn success">
+    
+    {% if a[2] %}
+        <a href="/resume/{{ a[2] }}" target="_blank" class="btn success">
+            View Resume
+        </a>
+    {% else %}
+    <span>No Resume</span>
+    {% endif %}
+    <!-- <a href="/resume/{{ a[2] }}" target="_blank" class="btn success">
         View Resume
-    </a>
+    </a> -->
+
 </div>
 {% endfor %}
 
