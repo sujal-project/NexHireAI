@@ -1,24 +1,29 @@
 {% extends "layout.html" %}
+
 {% block content %}
 
-<h2>MCQ Interview Practice</h2>
+<h2>AI MCQ Interview Practice</h2>
 
 <form method="POST">
 
     {% for q in questions %}
     <div class="card">
+
         <p><b>{{ loop.index }}. {{ q.question }}</b></p>
+
+        {% set q_index = loop.index0 %}
 
         {% for opt in q.options %}
             <label>
-                <input type="radio" name="q{{ loop.parent.index0 }}" value="{{ opt }}">
+                <input type="radio" name="q{{ q_index }}" value="{{ opt }}" required>
                 {{ opt }}
             </label><br>
         {% endfor %}
+
     </div>
     {% endfor %}
 
-    <button type="submit" class="btn success">Submit</button>
+    <button type="submit" class="btn success">Submit Test</button>
 
 </form>
 

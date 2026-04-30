@@ -327,11 +327,6 @@ def resume_score():
 
 #------------ interview prep ----------
 
-# @jobs_bp.route('/interview-prep')
-# @login_required
-# def interview_prep():
-#     return "<h2>Interview Preparation Coming Soon</h2>"
-
 
 from services.ai_engine import generate_interview_questions
 
@@ -373,6 +368,7 @@ def mcq():
     if not res or not res[0]:
         return "Upload resume first"
 
+    # convert resume skills → list
     skills = [s.strip().lower() for s in res[0].split(",")]
 
     questions = generate_mcq_questions(skills)
@@ -383,17 +379,14 @@ def mcq():
         total = len(questions)
 
         for i, q in enumerate(questions):
-            user_ans = request.form.get(f"q{i}")
-            if user_ans == q["answer"]:
+            user_answer = request.form.get(f"q{i}")
+
+            if user_answer == q["answer"]:
                 score += 1
 
         return f"<h2>Your Score: {score}/{total}</h2>"
 
     return render_template("mcq.html", questions=questions)
-
-
-
-
 
 
 

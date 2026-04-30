@@ -197,51 +197,55 @@ def ai_chatbot_response(message):
 
 #-------------- MCQ Generator -----------
 
-def generate_mcq_questions(skills):
-    
-    mcqs = []
+import random
 
-    SAMPLE_MCQS = {
-        "python": [
-            {
-                "question": "What is a decorator in Python?",
-                "options": [
-                    "A function that modifies another function",
-                    "A loop structure",
-                    "A variable type",
-                    "An error handler"
-                ],
-                "answer": "A function that modifies another function"
-            }
-        ],
-        "sql": [
-            {
-                "question": "What does JOIN do?",
-                "options": [
-                    "Combines rows from tables",
-                    "Deletes data",
-                    "Updates records",
-                    "Creates tables"
-                ],
-                "answer": "Combines rows from tables"
-            }
-        ],
-        "flask": [
-            {
-                "question": "What is Flask?",
-                "options": [
-                    "A Python web framework",
-                    "A database",
-                    "A frontend library",
-                    "An OS"
-                ],
-                "answer": "A Python web framework"
-            }
-        ]
-    }
+def generate_mcq_questions(skills):
+    questions = []
 
     for skill in skills:
-        if skill in SAMPLE_MCQS:
-            mcqs.extend(SAMPLE_MCQS[skill])
+        skill = skill.lower().strip()
 
-    return mcqs[:5]
+        # -----------------------------
+        # UNIVERSAL MCQ GENERATOR
+        # -----------------------------
+
+        # Q1: Definition type
+        questions.append({
+            "question": f"What is {skill} mainly used for?",
+            "options": [
+                f"Building applications related to {skill}",
+                "Only for operating system design",
+                "Only for hardware manufacturing",
+                "Not used in software development"
+            ],
+            "answer": f"Building applications related to {skill}"
+        })
+
+        # Q2: Concept understanding
+        questions.append({
+            "question": f"Which statement best describes {skill}?",
+            "options": [
+                f"It is a technology/skill used in software development",
+                "It is a type of database only",
+                "It is a hardware component",
+                "It is unrelated to programming"
+            ],
+            "answer": f"It is a technology/skill used in software development"
+        })
+
+        # Q3: Usage scenario
+        questions.append({
+            "question": f"Where is {skill} commonly used?",
+            "options": [
+                "Software development projects",
+                "Only in agriculture systems",
+                "Only in accounting books",
+                "Only in mechanical machines"
+            ],
+            "answer": "Software development projects"
+        })
+
+    # limit to avoid overload
+    random.shuffle(questions)
+    return questions[:10]
+
