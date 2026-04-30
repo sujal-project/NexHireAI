@@ -2,6 +2,7 @@ from flask import Blueprint, render_template, request, redirect, current_app, se
 from flask_login import login_required, current_user
 from models.db import get_connection
 from werkzeug.utils import secure_filename
+from services.ai_engine import generate_mcq_questions
 import os
 import uuid
 import PyPDF2
@@ -326,16 +327,69 @@ def resume_score():
 
 #------------ interview prep ----------
 
+# @jobs_bp.route('/interview-prep')
+# @login_required
+# def interview_prep():
+#     return "<h2>Interview Preparation Coming Soon</h2>"
+
+
+from services.ai_engine import generate_interview_questions
+
 @jobs_bp.route('/interview-prep')
 @login_required
 def interview_prep():
-    return "<h2>Interview Preparation Coming Soon</h2>"
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT extracted_skills FROM resumes WHERE user_id=?", (current_user.id,))
+    res = cursor.fetchone()
+
+    if not res or not res[0]:
+        return "Upload resume first"
+
+    skills = [s.strip().lower() for s in res[0].split(",")]
+
+    questions = generate_interview_questions(skills)
+
+    return render_template(
+        "interview.html",
+        questions=[(None, s, q, "medium") for s in skills for q in questions]
+    )
 
 
+#--------------- MCQ Generator -----------
 
+@jobs_bp.route('/mcq', methods=['GET', 'POST'])
+@login_required
+def mcq():
 
+    conn = get_connection()
+    cursor = conn.cursor()
 
+    cursor.execute("SELECT extracted_skills FROM resumes WHERE user_id=?", (current_user.id,))
+    res = cursor.fetchone()
 
+    if not res or not res[0]:
+        return "Upload resume first"
+
+    skills = [s.strip().lower() for s in res[0].split(",")]
+
+    questions = generate_mcq_questions(skills)
+
+    if request.method == "POST":
+
+        score = 0
+        total = len(questions)
+
+        for i, q in enumerate(questions):
+            user_ans = request.form.get(f"q{i}")
+            if user_ans == q["answer"]:
+                score += 1
+
+        return f"<h2>Your Score: {score}/{total}</h2>"
+
+    return render_template("mcq.html", questions=questions)
 
 
 

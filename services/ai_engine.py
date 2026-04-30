@@ -195,3 +195,53 @@ def ai_chatbot_response(message):
         return "I can help with jobs, resumes, and interviews!"
 
 
+#-------------- MCQ Generator -----------
+
+def generate_mcq_questions(skills):
+    
+    mcqs = []
+
+    SAMPLE_MCQS = {
+        "python": [
+            {
+                "question": "What is a decorator in Python?",
+                "options": [
+                    "A function that modifies another function",
+                    "A loop structure",
+                    "A variable type",
+                    "An error handler"
+                ],
+                "answer": "A function that modifies another function"
+            }
+        ],
+        "sql": [
+            {
+                "question": "What does JOIN do?",
+                "options": [
+                    "Combines rows from tables",
+                    "Deletes data",
+                    "Updates records",
+                    "Creates tables"
+                ],
+                "answer": "Combines rows from tables"
+            }
+        ],
+        "flask": [
+            {
+                "question": "What is Flask?",
+                "options": [
+                    "A Python web framework",
+                    "A database",
+                    "A frontend library",
+                    "An OS"
+                ],
+                "answer": "A Python web framework"
+            }
+        ]
+    }
+
+    for skill in skills:
+        if skill in SAMPLE_MCQS:
+            mcqs.extend(SAMPLE_MCQS[skill])
+
+    return mcqs[:5]

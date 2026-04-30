@@ -43,6 +43,7 @@ body {
     padding: 15px;
     margin-bottom: 15px;
     border-radius: 10px;
+    text-underline-position: none;
 }
 
 /* BUTTON */
@@ -83,3 +84,10 @@ body {
 .user { text-align: right; color: blue; }
 .bot { text-align: left; color: green; }
 
+.mt-5{
+    width: 600px; 
+}
+
+.card shadow-sm p-3{
+    
+}
