@@ -1,7 +1,33 @@
 {% extends "layout.html" %}
 {% block content %}
 
-<h2>All Jobs</h2>
+
+<h1>Recommended Jobs</h1>
+
+{% if recommended %}
+    {% for job in recommended %}
+    <div class="card highlight">
+        <h3>{{ job.title }}</h3>
+        <p><b>Company:</b> {{ job.company }}</p>
+        <p><b>Skills:</b> {{ job.skills }}</p>
+        <p><b>Location:</b> {{ job.location }}</p>
+
+        {% if job.id in current_user_app_ids %}
+            <button class="btn success" disabled>Applied</button>
+        {% else %}
+            <a href="/apply/{{ job.id }}" class="btn primary">Apply</a>
+        {% endif %}
+    </div>
+    {% endfor %}
+{% else %}
+    <p>No recommendations yet. Upload resume to get AI suggestions.</p>
+{% endif %}
+
+
+<hr>
+
+
+<h1>All Jobs</h1>
 
 {% for job in all_jobs %}
 <div class="card">
@@ -18,17 +44,6 @@
 </div>
 {% endfor %}
 
-<hr>
-
-<h2>Recommended Jobs</h2>
-
-{% for job in recommended %}
-<div class="card highlight">
-    <h3>{{ job.title }}</h3>
-    <p>{{ job.company }}</p>
-    <p>{{ job.skills }}</p>
-</div>
-{% endfor %}
 
 {% endblock %}
 

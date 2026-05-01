@@ -3,11 +3,15 @@ from flask_login import login_required, current_user
 from models.db import get_connection
 from werkzeug.utils import secure_filename
 from services.ai_engine import generate_mcq_questions
+from services.ai_engine import extract_skills, score_resume, match_jobs
 import os
 import uuid
 import PyPDF2
+# # from services.ai_engine import extract_skills, score_resumeimport
+# import uuid
+# import PyPDF2
 
-from services.ai_engine import extract_skills, match_jobs
+# from services.ai_engine import extract_skills, match_jobs
 
 jobs_bp = Blueprint('jobs', __name__)
 
@@ -239,7 +243,11 @@ def upload_resume():
             for page in reader.pages:
                 text += page.extract_text() or ""
 
-        skills = extract_skills(text)
+        result = score_resume(text)
+
+        skills = result["skills"]
+        score = result["score"]
+        # skills = extract_skills(text)
 
         conn = get_connection()
         cursor = conn.cursor()
@@ -253,7 +261,7 @@ def upload_resume():
             current_user.id,
             unique_name,
             ",".join(skills),
-            0
+            score
         ))
 
         conn.commit()
@@ -323,8 +331,46 @@ def chatbot():
 @jobs_bp.route('/resume-score')
 @login_required
 def resume_score():
-    return "<h2>Resume Score Feature Coming Soon</h2>"
 
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT extracted_skills, score 
+        FROM resumes 
+        WHERE user_id=?
+    """, (current_user.id,))
+
+    res = cursor.fetchone()
+
+    if not res:
+        return "Upload resume first"
+
+    skills = res[0].split(",") if res[0] else []
+    score = res[1]
+
+    # OPTIONAL: regenerate feedback (clean way)
+    cursor.execute("SELECT file_name FROM resumes WHERE user_id=?", (current_user.id,))
+    file = cursor.fetchone()[0]
+
+    import os, PyPDF2
+    path = os.path.join(current_app.config['UPLOAD_FOLDER'], file)
+
+    text = ""
+    with open(path, "rb") as f:
+        reader = PyPDF2.PdfReader(f)
+        for page in reader.pages:
+            text += page.extract_text() or ""
+
+    result = score_resume(text)
+    feedback = result["feedback"]
+
+    return render_template(
+        "resume_score.html",
+        score=score,
+        skills=skills,
+        feedback=feedback
+    )
 #------------ interview prep ----------
 
 

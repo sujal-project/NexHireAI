@@ -1,17 +1,13 @@
 {% extends "layout.html" %}
+
 {% block content %}
 
 <h2>Resume Score</h2>
 
 <div class="card">
-    <h3>Score: {{ score }}/100</h3>
-
-    <h4>Extracted Skills:</h4>
-    <ul>
-        {% for s in skills %}
-            <li>{{ s }}</li>
-        {% endfor %}
-    </ul>
+    <h1>{{ score }}/100</h1>
 </div>
 
 {% endblock %}
+
+
