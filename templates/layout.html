@@ -4,6 +4,13 @@
     <meta charset="UTF-8">
     <title>NexHireAI</title>
 
+    <script>
+    (function () {
+        const savedTheme = localStorage.getItem("theme") || "light";
+        document.documentElement.setAttribute("data-theme", savedTheme);
+    })();
+    </script>
+
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
@@ -26,12 +33,19 @@
             {% elif current_user.role == "recruiter" %}
                 <a href="/recruiter-dashboard">Dashboard</a>
                 <a href="/add-job">Post Job</a>
+            
             {% endif %}
+
+            {% if current_user.role == "admin" %}
+                <a href="/admin">Admin Dashboard</a>
+            {% endif %}
+
+            
 
             <a href="/logout">Logout</a>
 
             <!-- 🌙 DARK MODE -->
-            <button onclick="toggleTheme()" class="theme-btn">🌓</button>
+            <button onclick="toggleTheme()" class="theme-btn">🌖</button>
 
         {% else %}
             <a href="/login">Login</a>
@@ -55,7 +69,38 @@
     <input type="text" id="chat-input" placeholder="Ask something..." onkeypress="handleChat(event)">
 </div>
 
+
 <script>
+function toggleTheme() {
+    const html = document.documentElement;
+    const current = html.getAttribute("data-theme");
+
+    const newTheme = current === "dark" ? "light" : "dark";
+
+    html.setAttribute("data-theme", newTheme);
+    localStorage.setItem("theme", newTheme);
+}
+</script>
+
+
+<!-- <script>
+// APPLY SAVED THEME ON LOAD
+document.addEventListener("DOMContentLoaded", function () {
+    const savedTheme = localStorage.getItem("theme") || "light";
+    document.documentElement.dataset.theme = savedTheme;
+});
+
+// TOGGLE + SAVE THEME
+function toggleTheme() {
+    const html = document.documentElement;
+    const newTheme = html.dataset.theme === "dark" ? "light" : "dark";
+
+    html.dataset.theme = newTheme;
+    localStorage.setItem("theme", newTheme);
+}
+</script> -->
+
+<!-- <script>
 function toggleTheme() {
     const html = document.documentElement;
     html.dataset.theme = html.dataset.theme === "dark" ? "light" : "dark";
@@ -86,7 +131,7 @@ function handleChat(e) {
         input.value = "";
     }
 }
-</script>
+</script> -->
 
 </body>
 </html>

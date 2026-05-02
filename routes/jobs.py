@@ -292,29 +292,6 @@ def jobseeker_dashboard():
 
 
 
-# ---------------- ADMIN ----------------
-@jobs_bp.route('/admin')
-@login_required
-def admin():
-
-    if current_user.role != "recruiter":
-        return "Unauthorized", 403
-
-    conn = get_connection()
-    cursor = conn.cursor()
-
-    cursor.execute("SELECT COUNT(*) FROM users")
-    users = cursor.fetchone()[0]
-
-    cursor.execute("SELECT COUNT(*) FROM jobs")
-    jobs = cursor.fetchone()[0]
-
-    cursor.execute("SELECT COUNT(*) FROM applications")
-    apps = cursor.fetchone()[0]
-
-    return render_template("admin.html", users=users, jobs=jobs, apps=apps)
-
-
 #----------------- CHATBOT BACKEND ROUTE ----------
 
 @jobs_bp.route('/chatbot', methods=['POST'])
@@ -434,5 +411,46 @@ def mcq():
 
     return render_template("mcq.html", questions=questions)
 
+
+
+# ---------------- ADMIN ----------------
+@jobs_bp.route('/admin')
+@login_required
+def admin():
+
+    if current_user.role != "admin":
+        return "Unauthorized", 403
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    # Total users
+    cursor.execute("SELECT COUNT(*) FROM users")
+    total_users = cursor.fetchone()[0]
+
+    # Recruiters
+    cursor.execute("SELECT COUNT(*) FROM users WHERE role='recruiter'")
+    recruiters = cursor.fetchone()[0]
+
+    # Jobseekers
+    cursor.execute("SELECT COUNT(*) FROM users WHERE role='jobseeker'")
+    jobseekers = cursor.fetchone()[0]
+
+    # Jobs
+    cursor.execute("SELECT COUNT(*) FROM jobs")
+    jobs = cursor.fetchone()[0]
+
+    # Applications
+    cursor.execute("SELECT COUNT(*) FROM applications")
+    applications = cursor.fetchone()[0]
+
+    return render_template(
+        "admin.html",
+        total_users=total_users,
+        recruiters=recruiters,
+        jobseekers=jobseekers,
+        jobs=jobs,
+        applications=applications
+    )
 
 

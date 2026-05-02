@@ -3,30 +3,33 @@
 
 <h2>Admin Dashboard</h2>
 
-<div class="row">
+<div class="grid">
 
-<div class="col-md-4">
-<div class="card p-3">
-<h5>Total Users</h5>
-<h2>{{ users }}</h2>
-</div>
-</div>
+    <div class="card">
+        <h3>Total Users</h3>
+        <h2>{{ total_users }}</h2>
+    </div>
 
-<div class="col-md-4">
-<div class="card p-3">
-<h5>Total Jobs</h5>
-<h2>{{ jobs }}</h2>
-</div>
-</div>
+    <div class="card">
+        <h3>Recruiters</h3>
+        <h2>{{ recruiters }}</h2>
+    </div>
 
-<div class="col-md-4">
-<div class="card p-3">
-<h5>Applications</h5>
-<h2>{{ apps }}</h2>
-</div>
-</div>
+    <div class="card">
+        <h3>Job Seekers</h3>
+        <h2>{{ jobseekers }}</h2>
+    </div>
+
+    <div class="card">
+        <h3>Total Jobs</h3>
+        <h2>{{ jobs }}</h2>
+    </div>
+
+    <div class="card">
+        <h3>Total Applications</h3>
+        <h2>{{ applications }}</h2>
+    </div>
 
 </div>
 
 {% endblock %}
-
