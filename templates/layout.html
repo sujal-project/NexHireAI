@@ -83,56 +83,6 @@ function toggleTheme() {
 </script>
 
 
-<!-- <script>
-// APPLY SAVED THEME ON LOAD
-document.addEventListener("DOMContentLoaded", function () {
-    const savedTheme = localStorage.getItem("theme") || "light";
-    document.documentElement.dataset.theme = savedTheme;
-});
-
-// TOGGLE + SAVE THEME
-function toggleTheme() {
-    const html = document.documentElement;
-    const newTheme = html.dataset.theme === "dark" ? "light" : "dark";
-
-    html.dataset.theme = newTheme;
-    localStorage.setItem("theme", newTheme);
-}
-</script> -->
-
-<!-- <script>
-function toggleTheme() {
-    const html = document.documentElement;
-    html.dataset.theme = html.dataset.theme === "dark" ? "light" : "dark";
-}
-
-function toggleChat() {
-    document.getElementById("chatbox").classList.toggle("hidden");
-}
-
-function handleChat(e) {
-    if (e.key === "Enter") {
-        let input = document.getElementById("chat-input");
-        let msg = input.value;
-
-        let container = document.getElementById("chat-messages");
-        container.innerHTML += `<div class='user'>${msg}</div>`;
-
-        fetch("/chatbot", {
-            method: "POST",
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({message: msg})
-        })
-        .then(res => res.json())
-        .then(data => {
-            container.innerHTML += `<div class='bot'>${data.reply}</div>`;
-        });
-
-        input.value = "";
-    }
-}
-</script> -->
-
 </body>
 </html>
 
