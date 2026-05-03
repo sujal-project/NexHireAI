@@ -82,6 +82,46 @@ function toggleTheme() {
 }
 </script>
 
+<script>
+function toggleChat() {
+    const chatbox = document.getElementById("chatbox");
+    chatbox.classList.toggle("hidden");
+}
+
+// Handle Enter key
+function handleChat(event) {
+    if (event.key === "Enter") {
+        const input = document.getElementById("chat-input");
+        const message = input.value.trim();
+
+        if (message === "") return;
+
+        const chatMessages = document.getElementById("chat-messages");
+
+        // User message
+        chatMessages.innerHTML += `<div class="user">${message}</div>`;
+
+        // Dummy bot reply (you can connect backend later)
+        chatMessages.innerHTML += `<div class="bot">Typing...</div>`;
+
+        input.value = "";
+
+        // Auto scroll
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+}
+</script>
+
+<script>
+document.addEventListener("click", function(e) {
+    const chatbox = document.getElementById("chatbox");
+    const button = document.querySelector(".chatbot-btn");
+
+    if (!chatbox.contains(e.target) && !button.contains(e.target)) {
+        chatbox.classList.add("hidden");
+    }
+});
+</script>
 
 </body>
 </html>

@@ -1,38 +1,38 @@
 {% extends "layout.html" %}
 {% block content %}
 
-<h2>Welcome, {{ current_user.name }}</h2>
+<h1>Welcome, {{ current_user.name }}</h1>
 
 <div class="grid">
 
-    <div class="card">
+    <div class="card1">
         <h3>Find Jobs</h3>
         <p>Browse and apply for jobs</p>
-        <button><a href="/jobs" class="btn primary">View Jobs</a></button>
+        <a href="/jobs" class="btn primary">View Jobs</a>
     </div>
 
-    <div class="card">
+    <div class="card1">
         <h3>Upload Resume</h3>
         <p>Improve your job matches</p>
-        <button><a href="/upload-resume" class="btn primary">Upload</a></button>
+        <a href="/upload-resume" class="btn primary">Upload</a>
     </div>
 
-    <div class="card">
+    <div class="card1">
         <h3>My Applications</h3>
         <p>Track your job applications</p>
-        <button><a href="/my-applications" class="btn primary">View Applications</a></button>
+        <a href="/my-applications" class="btn primary">View Applications</a>
     </div>
 
-    <div class="card">
+    <div class="card1">
         <h3>Interview Prep With (MCQ) Mode</h3>
         <p>Practice questions</p>
-        <button><a href="/mcq" class="btn primary">Start Practice</a></button>
+        <a href="/mcq" class="btn primary">Start Practice</a>
     </div>
 
-    <div class="card">
+    <div class="card1">
         <h3>Resume Score</h3>
         <p>Check your resume strength</p>
-        <button><a href="/resume-score" class="btn primary">Check Score</a></button>
+        <a href="/resume-score" class="btn primary">Check Score</a>
     </div>
 
 
