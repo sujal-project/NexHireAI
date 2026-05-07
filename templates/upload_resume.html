@@ -3,13 +3,30 @@
 {% block content %}
 
 <div class="container mt-4">
+
     <h2>Upload Resume</h2>
 
-    <form method="POST" enctype="multipart/form-data">
-        <input type="file" name="resume" class="form-control mb-3" required>
-        <button type="submit" class="btn btn-success">Upload</button>
+    <form method="POST" enctype="multipart/form-data" class="card">
+
+        <input type="file"
+               name="resume"
+               class="form-control mb-3"
+               required>
+
+        <button type="submit" class="btn btn-success">
+            Upload Resume
+        </button>
+
     </form>
+
 </div>
 
-{% endblock %}
+{% if uploaded %}
+<script>
+    window.onload = function () {
+        alert("✅ Resume Uploaded Successfully!");
+    };
+</script>
+{% endif %}
 
+{% endblock %}

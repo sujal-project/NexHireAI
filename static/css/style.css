@@ -340,7 +340,15 @@ h2.mb-4 {
 }
 
 
-
+.skill-badge{
+    display:inline-block;
+    background:#0073b1;
+    color:white;
+    padding:6px 12px;
+    margin:5px;
+    border-radius:20px;
+    font-size:14px;
+}
 
 
 

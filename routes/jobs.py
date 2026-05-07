@@ -217,53 +217,126 @@ def my_applications():
 
 
 # ---------------- RESUME UPLOAD ----------------
+
 @jobs_bp.route('/upload-resume', methods=['GET','POST'])
 @login_required
 def upload_resume():
+
+    extracted_skills = []
+    resume_score_value = None
+    feedback = []
 
     if request.method == 'POST':
 
         file = request.files['resume']
 
+        if not file:
+            return "No file selected"
+
         filename = secure_filename(file.filename)
         unique_name = f"{current_user.id}_{uuid.uuid4().hex}.pdf"
 
-        path = os.path.join(current_app.config['UPLOAD_FOLDER'], unique_name)
+        path = os.path.join(
+            current_app.config['UPLOAD_FOLDER'],
+            unique_name
+        )
 
         file.save(path)
 
+        # ---------------- PDF READ ----------------
         text = ""
+
         with open(path, "rb") as f:
             reader = PyPDF2.PdfReader(f)
+
             for page in reader.pages:
                 text += page.extract_text() or ""
 
+        # ---------------- AI ANALYSIS ----------------
         result = score_resume(text)
 
-        skills = result["skills"]
-        score = result["score"]
-        # skills = extract_skills(text)
+        extracted_skills = result["skills"]
+        resume_score_value = result["score"]
+        feedback = result["feedback"]
 
+        # ---------------- SAVE DB ----------------
         conn = get_connection()
         cursor = conn.cursor()
 
-        cursor.execute("DELETE FROM resumes WHERE user_id=?", (current_user.id,))
+        cursor.execute(
+            "DELETE FROM resumes WHERE user_id=?",
+            (current_user.id,)
+        )
 
         cursor.execute("""
-        INSERT INTO resumes (user_id, file_name, extracted_skills, score)
+        INSERT INTO resumes (
+            user_id,
+            file_name,
+            extracted_skills,
+            score
+        )
         VALUES (?,?,?,?)
         """, (
             current_user.id,
             unique_name,
-            ",".join(skills),
-            score
+            ",".join(extracted_skills),
+            resume_score_value
         ))
 
         conn.commit()
 
-        return f"Skills: {skills}"
+    return render_template(
+        "upload_resume.html",
+        uploaded=True if request.method == "POST" else False
+)
 
-    return render_template("upload_resume.html")
+# @jobs_bp.route('/upload-resume', methods=['GET','POST'])
+# @login_required
+# def upload_resume():
+
+#     if request.method == 'POST':
+
+#         file = request.files['resume']
+
+#         filename = secure_filename(file.filename)
+#         unique_name = f"{current_user.id}_{uuid.uuid4().hex}.pdf"
+
+#         path = os.path.join(current_app.config['UPLOAD_FOLDER'], unique_name)
+
+#         file.save(path)
+
+#         text = ""
+#         with open(path, "rb") as f:
+#             reader = PyPDF2.PdfReader(f)
+#             for page in reader.pages:
+#                 text += page.extract_text() or ""
+
+#         result = score_resume(text)
+
+#         skills = result["skills"]
+#         score = result["score"]
+#         # skills = extract_skills(text)
+
+#         conn = get_connection()
+#         cursor = conn.cursor()
+
+#         cursor.execute("DELETE FROM resumes WHERE user_id=?", (current_user.id,))
+
+#         cursor.execute("""
+#         INSERT INTO resumes (user_id, file_name, extracted_skills, score)
+#         VALUES (?,?,?,?)
+#         """, (
+#             current_user.id,
+#             unique_name,
+#             ",".join(skills),
+#             score
+#         ))
+
+#         conn.commit()
+
+#         return f"Skills: {skills}"
+
+#     return render_template("upload_resume.html")
 
 
 # ---------------- RESUME VIEW ----------------
