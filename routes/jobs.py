@@ -7,11 +7,6 @@ from services.ai_engine import extract_skills, score_resume, match_jobs
 import os
 import uuid
 import PyPDF2
-# # from services.ai_engine import extract_skills, score_resumeimport
-# import uuid
-# import PyPDF2
-
-# from services.ai_engine import extract_skills, match_jobs
 
 jobs_bp = Blueprint('jobs', __name__)
 
